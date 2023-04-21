@@ -11,7 +11,6 @@ export default function Home() {
    * landscape: 横向き
    */
   const [orientation, setOrientation] = useState(null);
-  console.log(orientation);
   const handleChangeOrientation = useCallback(
     (value) => {
       screen.orientation
@@ -20,7 +19,6 @@ export default function Home() {
           setOrientation(value);
         })
         .catch((err) => {
-          console.log('error');
           console.log(err);
           setOrientation(undefined);
         });
