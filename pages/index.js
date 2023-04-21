@@ -19,7 +19,6 @@ export default function Home() {
           setOrientation(value);
         })
         .catch((err) => {
-          console.log(err);
           setOrientation(undefined);
         });
     },
