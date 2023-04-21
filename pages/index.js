@@ -19,6 +19,7 @@ export default function Home() {
           await document.documentElement.requestFullscreen();
         } catch (err) {
           console.log(err);
+          setOrientation(undefined);
           return;
         }
       }
@@ -73,7 +74,9 @@ export default function Home() {
             )}
           </h1>
         )}
-        {orientation === undefined && <p>スマートフォンでお試しください</p>}
+        {orientation === undefined && (
+          <p>タブレット、もしくはスマートフォンでお試しください</p>
+        )}
         {orientation && (
           <button onClick={toggle} className={styles.toggleButton}>
             Change to landscape orientation
