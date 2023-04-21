@@ -12,15 +12,29 @@ export default function Home() {
    */
   const [orientation, setOrientation] = useState(null);
   const handleChangeOrientation = useCallback(
-    (value) => {
-      screen.orientation
-        .lock(value)
-        .then(() => {
-          setOrientation(value);
-        })
-        .catch((err) => {
-          setOrientation(undefined);
-        });
+    async (value) => {
+      // フルスクリーンでない場合に実行
+      if (!document.fullscreenElement) {
+        try {
+          await document.documentElement.requestFullscreen();
+        } catch (err) {
+          console.log(err);
+          return;
+        }
+      }
+      // 画面のロック
+      if ('lock' in screen.orientation) {
+        screen.orientation
+          .lock(value)
+          .then(() => {
+            setOrientation(value);
+          })
+          .catch((err) => {
+            setOrientation(undefined);
+          });
+      } else {
+        setOrientation(undefined);
+      }
     },
     [orientation]
   );
