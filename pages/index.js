@@ -11,6 +11,7 @@ export default function Home() {
    * landscape: 横向き
    */
   const [orientation, setOrientation] = useState(null);
+  const [lockErrorType, setLockErrorType] = useState(null);
   const handleChangeOrientation = useCallback(
     async (value) => {
       // フルスクリーンでない場合に実行
@@ -18,9 +19,10 @@ export default function Home() {
         try {
           await document.documentElement.requestFullscreen();
         } catch (err) {
-          console.log(err);
+          if (err instanceof Error) {
+            console.log(err.name);
+          }
           setOrientation(undefined);
-          return;
         }
       }
       // 画面のロック
@@ -31,6 +33,10 @@ export default function Home() {
             setOrientation(value);
           })
           .catch((err) => {
+            if (err instanceof Error) {
+              console.log(err.name);
+              setLockErrorType(err.name);
+            }
             setOrientation(undefined);
           });
       } else {
@@ -63,7 +69,7 @@ export default function Home() {
           <h1 className={styles.title}>
             {orientation === undefined && (
               <>
-                This device does not support <span>orientation locking</span>
+                This device does not support <span>orientation lock</span>
               </>
             )}
             {orientation && (
@@ -75,7 +81,13 @@ export default function Home() {
           </h1>
         )}
         {orientation === undefined && (
-          <p>タブレット、もしくはスマートフォンでお試しください</p>
+          <>
+            {lockErrorType !== null ? (
+              <p>screen.orientation.lock: {lockErrorType}</p>
+            ) : (
+              <p>タブレット、もしくはスマートフォンでお試しください</p>
+            )}
+          </>
         )}
         {orientation && (
           <button onClick={toggle} className={styles.toggleButton}>
